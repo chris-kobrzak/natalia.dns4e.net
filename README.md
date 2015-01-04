@@ -120,3 +120,9 @@ I am intending to use the following technologies:
 - jQuery Swipebox,
 - Girder or Gridism (the latter is less Sass-friendly though),
 - Vanilla JavaScript.
+
+### Initial set-up
+
+``` bash
+$ yo webapp // with Sass ticked
+```

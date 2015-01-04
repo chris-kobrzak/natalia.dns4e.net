@@ -1,5 +1,6 @@
 {
-  "name": "yo",
+  "name": "natalia.dns4e.net",
+  "description": "Little Natalie's Web site",
   "devDependencies": {
     "apache-server-configs": "^2.7.1",
     "grunt": "^0.4.5",

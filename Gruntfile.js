@@ -18,6 +18,8 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require("load-grunt-tasks")(grunt);
 
+  var connectProxyUtils = require("grunt-connect-proxy/lib/utils");
+
   // Configurable paths
   var config = {
     app: "app",
@@ -80,13 +82,29 @@ module.exports = function (grunt) {
         // Change this to "0.0.0.0" to access the server from outside
         hostname: "natalia.dns4e.local"
       },
+      // TODO This is a temporary measure
+      // to be able to use photos currently available on the
+      // production site
+      proxies: [
+        {
+          context: "/photo",
+          host: "natalia.dns4e.net",
+          port: 80
+        },
+        {
+          context: "/thumbnail",
+          host: "natalia.dns4e.net",
+          port: 80
+        }
+      ],
       livereload: {
         options: {
           middleware: function(connect) {
             return [
               connect.static(".tmp"),
               connect().use("/bower_components", connect.static("./bower_components")),
-              connect.static(config.app)
+              connect.static(config.app),
+              connectProxyUtils.proxyRequest
             ];
           }
         }
@@ -374,6 +392,7 @@ module.exports = function (grunt) {
       "wiredep",
       "concurrent:server",
       "autoprefixer",
+      "configureProxies:server",
       "connect:livereload",
       "watch"
     ]);

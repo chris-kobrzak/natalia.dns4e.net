@@ -2,6 +2,7 @@
   "name": "natalia.dns4e.net",
   "private": true,
   "dependencies": {
-    "jquery": "~1.11.1"
+    "jquery": "~1.11.1",
+    "jquery-template": "~1.4.4"
   }
 }

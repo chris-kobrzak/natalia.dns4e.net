@@ -126,4 +126,7 @@ I am intending to use the following technologies:
 ``` bash
 $ yo webapp // with Sass ticked
 $ npm install grunt-connect-proxy --save-dev
+$ bower install
+$ grunt build
+$ grunt serve // for development purposes
 ```

@@ -31,9 +31,9 @@ GalleryModel.prototype.syncWithRemoteDb = function() {
 GalleryModel.prototype.loadGallery = function( year, month ) {
   this.db.allDocs({
     include_docs: true,
-    descending: false,
-    startkey: GalleryModel.getDbKeyByYearAndMonth( year, month ),
-    endkey: GalleryModel.getDbEndKeyByYearAndMonth( year, month )
+    descending: true,
+    startkey: GalleryModel.getDbEndKeyByYearAndMonth( year, month ),
+    endkey: GalleryModel.getDbKeyByYearAndMonth( year, month )
   }).then( function( response ) {
     var gallery = GalleryModel.parseDbResponse( response.rows );
     $(document).trigger( "galleryReady.GalleryModel", {

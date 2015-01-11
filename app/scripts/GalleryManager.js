@@ -23,7 +23,6 @@ GalleryManager.handleGalleryHierarchyReadyEvent = function() {
 GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
   $(document).on("galleryNavigationReady.GalleryManager", function() {
     $("#galleryNavigation").on("click", "a", function( event ) {
-      event.preventDefault();
       var dateParts = GalleryManager.exractYearAndMonthFromGalleryLink( this.href );
       galleryModel.loadGallery( dateParts.year, dateParts.month );
     });

@@ -361,6 +361,31 @@ module.exports = function (grunt) {
       }
     },
 
+    manifest: {
+      generate: {
+        options: {
+          basePath: "<%= config.dist %>",
+//          cache: ["js/app.js", "css/style.css"],
+          network: ["http://*", "https://*"],
+          fallback: ["/ /offline.html"],
+          exclude: ["scripts/jquery.min.js"],
+          preferOnline: true,
+          verbose: true,
+          timestamp: true,
+          hash: true,
+          master: ["index.html"]
+        },
+        src: [
+          "*.html",
+            "scripts/*.js",
+            "styles/*.css",
+            "images/*.png",
+            "templates/*.html"
+        ],
+        dest: "<%= config.dist %>/gallery.appcache"
+      }
+    },
+
     // Run some tasks in parallel to speed up build process
     concurrent: {
       server: [

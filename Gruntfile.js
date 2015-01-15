@@ -67,8 +67,7 @@ module.exports = function (grunt) {
 				files: [
           "<%= config.app %>/{,*/}*.html",
           ".tmp/styles/{,*/}*.css",
-          "<%= config.app %>/images/{,*/}*",
-          "<%= config.app %>/*.appcache"
+          "<%= config.app %>/images/{,*/}*"
         ]
       }
     },
@@ -342,7 +341,7 @@ module.exports = function (grunt) {
           cwd: "<%= config.app %>",
           dest: "<%= config.dist %>",
           src: [
-            "*.{ico,png,txt,appcache}",
+            "*.{ico,png,txt}",
             "images/{,*/}*.webp",
             "{,*/}*.html",
             "styles/fonts/{,*/}*.*"
@@ -368,7 +367,7 @@ module.exports = function (grunt) {
 //          cache: ["js/app.js", "css/style.css"],
           network: ["http://*", "https://*"],
           fallback: ["/ /offline.html"],
-          exclude: ["scripts/jquery.min.js"],
+          exclude: ["offline.html"],
           preferOnline: true,
           verbose: true,
           timestamp: true,

@@ -1,15 +1,7 @@
 // TODO Remote sync functionality ought to go to a separate class
 // TODO Class should be broken down into gallery and gallery-nav
-function GalleryModel( options ) {
-  var defaults = {
-    dbName: "",
-    remoteDbUrl: ""
-  };
-
-  $.extend(this, defaults, options);
-
-  this.db = new PouchDB( this.dbName ),
-  this.remoteDb = new PouchDB( this.remoteDbUrl );
+function GalleryModel(dbConnection) {
+  this.db = dbConnection;
 }
 
 GalleryModel.imageAttributeMap = {
@@ -19,15 +11,6 @@ GalleryModel.imageAttributeMap = {
   title_pl: "titlePl",
   title_en: "titleEn",
   gallery: "gallery"
-};
-
-GalleryModel.prototype.replicateDb = function() {
-  this.remoteDb.replicate.to( this.db ).on("complete", function () {
-    $(document).trigger( "dbReplicated.GalleryModel" );
-    console.log( "Replication OK" );
-  }).on("error", function (error) {
-    console.error( "Could not replicate remote database", error );
-  });
 };
 
 GalleryModel.prototype.loadLatestImage = function() {
@@ -46,7 +29,18 @@ GalleryModel.prototype.loadLatestImage = function() {
   });
 };
 
-GalleryModel.prototype.loadGallery = function( year, month ) {
+GalleryModel.parseDbResponseForImage = function(responseRow) {
+  var photoData = {};
+  for (var dbField in this.imageAttributeMap) {
+    if ( ! this.imageAttributeMap.hasOwnProperty( dbField ) ) {
+      continue;
+    }
+    photoData[ this.imageAttributeMap[ dbField ] ] = responseRow.doc[ dbField ];
+  }
+  return photoData;
+};
+
+GalleryModel.prototype.load = function( year, month ) {
   this.db.allDocs({
     include_docs: true,
     descending: true,
@@ -54,22 +48,11 @@ GalleryModel.prototype.loadGallery = function( year, month ) {
     endkey: GalleryModel.generateDbKeyFromYearAndMonth( year, month )
   }).then( function( response ) {
     var gallery = GalleryModel.parseDbResponse( response.rows );
-    $(document).trigger( "galleryLoaded.GalleryModel", {
+    $(document).trigger( "loaded.GalleryModel", {
       gallery: gallery
     });
   }).catch( function( error ) {
      console.error( "Could not load gallery", error );
-  });
-};
-
-GalleryModel.prototype.loadNavigation = function() {
-  this.db.allDocs().then( function( response ) {
-    var galleryHierarchy = GalleryModel.parseDbResponseForNavigation( response.rows );
-    $(document).trigger( "navigationLoaded.GalleryModel", {
-      galleryHierarchy: galleryHierarchy
-    });
-  }).catch( function( error ) {
-     console.error( "Could not load navigation", error );
   });
 };
 
@@ -86,25 +69,6 @@ GalleryModel.generateDbEndKeyFromYearAndMonth = function(year, month) {
   return this.generateDbKeyFromYearAndMonth( yearNextMonth, nextMonth );
 };
 
-GalleryModel.parseDbResponseForNavigation = function(responseRows) {
-  var navigation = {};
-  for (var i = 0; i < responseRows.length; i++) {
-    var galleryId = responseRows[i].id;
-    if (! NumberUtil.isNumeric( galleryId ) ) {
-      continue;
-    }
-    var year = galleryId.slice(0, 4),
-      month = galleryId.slice(4, 6);
-    if (! ( year in navigation ) ) {
-      navigation[year] = [];
-    }
-    if (! (~navigation[ year ].indexOf( month ) ) ) {
-      navigation[ year ].push( month );
-    }
-  }
-  return navigation;
-};
-
 GalleryModel.parseDbResponse = function(responseRows) {
   var gallery = [];
   for (var i = 0; i < responseRows.length; i++) {
@@ -112,15 +76,4 @@ GalleryModel.parseDbResponse = function(responseRows) {
     gallery.push( photoData );
   }
   return gallery;
-};
-
-GalleryModel.parseDbResponseForImage = function(responseRow) {
-  var photoData = {};
-  for (var dbField in this.imageAttributeMap) {
-    if ( ! this.imageAttributeMap.hasOwnProperty( dbField ) ) {
-      continue;
-    }
-    photoData[ this.imageAttributeMap[ dbField ] ] = responseRow.doc[ dbField ];
-  }
-  return photoData;
 };

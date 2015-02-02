@@ -1,3 +1,5 @@
+// TODO Remote sync functionality ought to go to a separate class
+// TODO Class should be broken down into gallery and gallery-nav
 function GalleryModel( options ) {
   var defaults = {
     dbName: "",
@@ -19,12 +21,28 @@ GalleryModel.imageAttributeMap = {
   gallery: "gallery"
 };
 
-GalleryModel.prototype.syncWithRemoteDb = function() {
+GalleryModel.prototype.replicateDb = function() {
   this.remoteDb.replicate.to( this.db ).on("complete", function () {
-    $(document).trigger( "replicatedDb.GalleryModel" );
+    $(document).trigger( "dbReplicated.GalleryModel" );
     console.log( "Replication OK" );
   }).on("error", function (error) {
     console.error( "Could not replicate remote database", error );
+  });
+};
+
+GalleryModel.prototype.loadLatestImage = function() {
+  this.db.allDocs({
+    include_docs: true,
+    descending: true,
+    limit: 1,
+    skip: 1,
+  }).then( function( response ) {
+    var image = GalleryModel.parseDbResponseForImage( response.rows[0] );
+    $(document).trigger( "latestImageLoaded.GalleryModel", {
+      image: image
+    });
+  }).catch( function( error ) {
+     console.error( "Could not select latest image", error );
   });
 };
 
@@ -32,11 +50,11 @@ GalleryModel.prototype.loadGallery = function( year, month ) {
   this.db.allDocs({
     include_docs: true,
     descending: true,
-    startkey: GalleryModel.getDbEndKeyByYearAndMonth( year, month ),
-    endkey: GalleryModel.getDbKeyByYearAndMonth( year, month )
+    startkey: GalleryModel.generateDbEndKeyFromYearAndMonth( year, month ),
+    endkey: GalleryModel.generateDbKeyFromYearAndMonth( year, month )
   }).then( function( response ) {
     var gallery = GalleryModel.parseDbResponse( response.rows );
-    $(document).trigger( "galleryReady.GalleryModel", {
+    $(document).trigger( "galleryLoaded.GalleryModel", {
       gallery: gallery
     });
   }).catch( function( error ) {
@@ -47,7 +65,7 @@ GalleryModel.prototype.loadGallery = function( year, month ) {
 GalleryModel.prototype.loadNavigation = function() {
   this.db.allDocs().then( function( response ) {
     var galleryHierarchy = GalleryModel.parseDbResponseForNavigation( response.rows );
-    $(document).trigger( "galleryHierarchyReady.GalleryModel", {
+    $(document).trigger( "navigationLoaded.GalleryModel", {
       galleryHierarchy: galleryHierarchy
     });
   }).catch( function( error ) {
@@ -55,17 +73,17 @@ GalleryModel.prototype.loadNavigation = function() {
   });
 };
 
-GalleryModel.getDbKeyByYearAndMonth = function(year, month) {
+GalleryModel.generateDbKeyFromYearAndMonth = function(year, month) {
   var yyyyMmDd = ( (parseInt( year, 10 ) * 100) +
     parseInt( month, 10 ) ) * 100 + 1;
   return yyyyMmDd + "000000";
 };
 
-GalleryModel.getDbEndKeyByYearAndMonth = function(year, month) {
+GalleryModel.generateDbEndKeyFromYearAndMonth = function(year, month) {
   var beginningOfNextMonth  = new Date(year, month),
     yearNextMonth = beginningOfNextMonth.getFullYear(),
     nextMonth = beginningOfNextMonth.getMonth() + 1;
-  return this.getDbKeyByYearAndMonth( yearNextMonth, nextMonth );
+  return this.generateDbKeyFromYearAndMonth( yearNextMonth, nextMonth );
 };
 
 GalleryModel.parseDbResponseForNavigation = function(responseRows) {
@@ -90,14 +108,19 @@ GalleryModel.parseDbResponseForNavigation = function(responseRows) {
 GalleryModel.parseDbResponse = function(responseRows) {
   var gallery = [];
   for (var i = 0; i < responseRows.length; i++) {
-    var photoData = {};
-    for (var dbField in this.imageAttributeMap) {
-      if ( ! this.imageAttributeMap.hasOwnProperty( dbField ) ) {
-        continue;
-      }
-      photoData[ this.imageAttributeMap[ dbField ] ] = responseRows[i].doc[ dbField ];
-    }
+    var photoData = this.parseDbResponseForImage( responseRows[i] );
     gallery.push( photoData );
   }
   return gallery;
+};
+
+GalleryModel.parseDbResponseForImage = function(responseRow) {
+  var photoData = {};
+  for (var dbField in this.imageAttributeMap) {
+    if ( ! this.imageAttributeMap.hasOwnProperty( dbField ) ) {
+      continue;
+    }
+    photoData[ this.imageAttributeMap[ dbField ] ] = responseRow.doc[ dbField ];
+  }
+  return photoData;
 };

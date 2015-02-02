@@ -1,5 +1,6 @@
-function GalleryManager(galleryModel) {
+function GalleryManager(galleryModel, galleryHierarchyModel) {
   this.galleryModel = galleryModel;
+  this.galleryHierarchyModel = galleryHierarchyModel;
 }
 
 GalleryManager.prototype.handleEvents = function( galleryModel ) {
@@ -10,19 +11,22 @@ GalleryManager.prototype.handleEvents = function( galleryModel ) {
 //  this.handleGalleryNavigationReadyEvent( galleryModel );
 };
 
-GalleryManager.prototype.replicateDb = function() {
+/*GalleryManager.prototype.replicateDb = function() {
   this.galleryModel.replicateDb();
-};
+};*/
 
 GalleryManager.prototype.handleUrlChangeEvent = function() {
   $(window).bind("load hashchange",
-    { galleryModel: this.galleryModel },
+    {
+      galleryModel: this.galleryModel,
+      galleryHierarchyModel: this.galleryHierarchyModel
+    },
     function(event) {
       var url = window.location.hash,
         dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( url );
       if (dateParts) {
-        event.data.galleryModel.loadGallery( dateParts.year, dateParts.month );
-        event.data.galleryModel.loadNavigation();
+        event.data.galleryModel.load( dateParts.year, dateParts.month );
+        event.data.galleryHierarchyModel.load();
       } else {
         event.data.galleryModel.loadLatestImage();
       }
@@ -35,7 +39,8 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
     "latestImageLoaded.GalleryModel",
     {
       context: this,
-      galleryModel: this.galleryModel
+      galleryModel: this.galleryModel,
+      galleryHierarchyModel: this.galleryHierarchyModel
     },
     function(event, data) {
       var gallery = data.image.gallery,
@@ -44,14 +49,14 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
         month = dateParts[1];
 // TODO Only proceed if the latest image is different from the one stored last time
       event.data.context.setImage( data.image );
-      event.data.galleryModel.loadGallery( year, month );
-      event.data.galleryModel.loadNavigation();
+      event.data.galleryModel.load( year, month );
+      event.data.galleryHierarchyModel.load();
     }
   );
 };
 
 GalleryManager.prototype.handleGalleryReadyEvent = function() {
-  $(document).on("galleryLoaded.GalleryModel",
+  $(document).on("loaded.GalleryModel",
   { context: this },
   function(event, data) {
     var galleryViewModel = new GalleryViewModel( data.gallery );
@@ -60,7 +65,7 @@ GalleryManager.prototype.handleGalleryReadyEvent = function() {
 };
 
 GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
-  $(document).on("navigationLoaded.GalleryModel",
+  $(document).on("loaded.GalleryHierarchyModel",
   { context: this },
   function(event, data) {
     var galleryNavigationViewModel = new GalleryNavigationViewModel( data.galleryHierarchy );
@@ -73,7 +78,7 @@ GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
   $(document).on("galleryNavigationReady.GalleryManager", function() {
     $("#galleryNavigation").on("click", "a", function( event ) {
       var dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( this.href );
-      galleryModel.loadGallery( dateParts.year, dateParts.month );
+      galleryModel.load( dateParts.year, dateParts.month );
     });
   });
 };

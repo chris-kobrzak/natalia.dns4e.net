@@ -1,6 +1,7 @@
-function GalleryManager(galleryModel, galleryHierarchyModel) {
-  this.galleryModel = galleryModel;
-  this.galleryHierarchyModel = galleryHierarchyModel;
+function GalleryManager(collaborators) {
+  this.galleryModel = collaborators.galleryModel;
+  this.galleryViewController = collaborators.galleryViewController;
+  this.galleryHierarchyModel = collaborators.galleryHierarchyModel;
 }
 
 GalleryManager.prototype.handleEvents = function( galleryModel ) {
@@ -57,10 +58,12 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
 
 GalleryManager.prototype.handleGalleryReadyEvent = function() {
   $(document).on("loaded.GalleryModel",
-  { context: this },
+  {
+    galleryViewController: this.galleryViewController
+  },
   function(event, data) {
     var galleryViewModel = new GalleryViewModel( data.gallery );
-    GalleryManager.populateGalleryTemplate( galleryViewModel );
+    event.data.galleryViewController.populateTemplate( galleryViewModel );
   });
 };
 
@@ -83,10 +86,6 @@ GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
   });
 };
 */
-
-GalleryManager.populateGalleryTemplate = function(viewModel) {
-  $("#gallery").loadTemplate( "templates/galleryItem.html", viewModel );
-};
 
 GalleryManager.populateGalleryNavigationTemplate = function(viewModel) {
   function populateGallerySubnavigationTemplates() {

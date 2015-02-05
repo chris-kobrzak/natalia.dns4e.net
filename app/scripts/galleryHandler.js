@@ -3,6 +3,7 @@
     GalleryModel,
     GalleryHierarchyModel,
     GalleryViewController,
+    GalleryNavigationViewController,
     GalleryManager,
     RemoteDatabaseManager) {
   var dbName = "natalie_gallery",
@@ -12,10 +13,12 @@
     galleryModel = new GalleryModel( db ),
     galleryHierarchyModel = new GalleryHierarchyModel( db ),
     galleryViewController = new GalleryViewController(),
+    galleryNavigationViewController = new GalleryNavigationViewController(),
     galleryManager = new GalleryManager({
       galleryModel: galleryModel,
       galleryHierarchyModel: galleryHierarchyModel,
-      galleryViewController: galleryViewController
+      galleryViewController: galleryViewController,
+      galleryNavigationViewController: galleryNavigationViewController
     }),
     remoteDatabaseManager = new RemoteDatabaseManager( remoteDb, db );
   galleryManager.handleEvents();
@@ -25,6 +28,7 @@
   GalleryModel,
   GalleryHierarchyModel,
   GalleryViewController,
+  GalleryNavigationViewController,
   GalleryManager,
   RemoteDatabaseManager
 );

@@ -37,7 +37,7 @@ GalleryNavigationViewModel.getMonthsDataForYearAndMonth = function(year, month) 
 GalleryNavigationViewModel.getYearsData = function(year, monthsData) {
   return {
     year: year,
-    yearMonths: "galleryYear" + year,
+    monthsInYear: "galleryYear" + year,
     monthsData: monthsData
   };
 };

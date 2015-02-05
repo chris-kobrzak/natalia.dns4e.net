@@ -2,6 +2,7 @@ function GalleryManager(collaborators) {
   this.galleryModel = collaborators.galleryModel;
   this.galleryViewController = collaborators.galleryViewController;
   this.galleryHierarchyModel = collaborators.galleryHierarchyModel;
+  this.galleryNavigationViewController = collaborators.galleryNavigationViewController;
 }
 
 GalleryManager.prototype.handleEvents = function( galleryModel ) {
@@ -69,16 +70,18 @@ GalleryManager.prototype.handleGalleryReadyEvent = function() {
 
 GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
   $(document).on("loaded.GalleryHierarchyModel",
-  { context: this },
+  {
+    galleryNavigationViewController: this.galleryNavigationViewController
+  },
   function(event, data) {
     var galleryNavigationViewModel = new GalleryNavigationViewModel( data.galleryHierarchy );
-    GalleryManager.populateGalleryNavigationTemplate( galleryNavigationViewModel );
+    event.data.galleryNavigationViewController.populateTemplate( galleryNavigationViewModel );
   });
 };
 
 /*
 GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
-  $(document).on("galleryNavigationReady.GalleryManager", function() {
+  $(document).on("templatePopulated.GalleryNavigationViewController", function() {
     $("#galleryNavigation").on("click", "a", function( event ) {
       var dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( this.href );
       galleryModel.load( dateParts.year, dateParts.month );
@@ -86,42 +89,6 @@ GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
   });
 };
 */
-
-GalleryManager.populateGalleryNavigationTemplate = function(viewModel) {
-  function populateGallerySubnavigationTemplates() {
-    for (var i = 0; i < viewModel.years.length; i++) {
-      var isLast = i === viewModel.years.length - 1;
-      populateGallerySubnavigationTemplate(
-        viewModel.years[i],
-        viewModel.yearsData[ i ].monthsData,
-        isLast
-      );
-    }
-  }
-
-  function populateGallerySubnavigationTemplate(year, monthsData, isLast) {
-    $("#galleryYear" + year ).loadTemplate(
-      "templates/galleryMonth.html",
-      monthsData,
-      {
-        success: function() {
-          if ( ! isLast ) {
-            return;
-          }
-          $(document).trigger("galleryNavigationReady.GalleryManager");
-        }
-      }
-    );
-  }
-
-  $("#galleryNavigation").loadTemplate(
-    "templates/galleryYear.html",
-    viewModel.yearsData,
-    {
-      success: populateGallerySubnavigationTemplates
-     }
-  );
-};
 
 GalleryManager.parseGalleryLinkForYearAndMonth = function( link ) {
   var galleryRegEx = /gallery\-([0-9]{4})\-([0-9]{2})/i,

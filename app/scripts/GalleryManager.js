@@ -12,6 +12,7 @@ GalleryManager.prototype.handleEvents = function() {
   this.handleLatestImageSelectedEvent();
   this.handleGalleryReadyEvent();
   this.handleGalleryHierarchyReadyEvent();
+  this.handleGalleryViewTemplatePopulatedEvent();
 //  this.handleGalleryNavigationReadyEvent( galleryModel );
 };
 
@@ -80,15 +81,16 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
 };
 
 GalleryManager.prototype.handleGalleryReadyEvent = function() {
-  var context = {
+  var objects = {
     galleryView: this.galleryView
   };
   $(document).on("loaded.GalleryModel",
-  context,
-  function(event, data) {
-    var galleryViewModel = new GalleryViewModel( data.gallery );
-    event.data.galleryView.populateTemplate( galleryViewModel );
-  });
+    objects,
+    function(event, data) {
+      var galleryViewModel = new GalleryViewModel( data.gallery );
+      event.data.galleryView.populateTemplate( galleryViewModel );
+    }
+  );
 };
 
 GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
@@ -96,11 +98,24 @@ GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
     galleryNavigationView: this.galleryNavigationView
   };
   $(document).on("loaded.GalleryHierarchyModel",
-  context,
-  function(event, data) {
-    var galleryNavigationViewModel = new GalleryNavigationViewModel( data.galleryHierarchy );
-    event.data.galleryNavigationView.populateTemplate( galleryNavigationViewModel );
-  });
+    context,
+    function(event, data) {
+      var galleryNavigationViewModel = new GalleryNavigationViewModel( data.galleryHierarchy );
+      event.data.galleryNavigationView.populateTemplate( galleryNavigationViewModel );
+    }
+  );
+};
+
+GalleryManager.prototype.handleGalleryViewTemplatePopulatedEvent = function() {
+  var context = {
+    galleryView: this.galleryView
+  };
+  $(document).on("templatePopulated.GalleryView",
+    context,
+    function(event) {
+      event.data.galleryView.bindImageViewer();
+    }
+  );
 };
 
 /*

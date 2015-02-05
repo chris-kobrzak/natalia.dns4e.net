@@ -4,6 +4,7 @@
   "dependencies": {
     "jquery": "~1.11.1",
     "jquery-template": "~1.4.4",
-    "pouchdb": "~3.2.1"
+    "pouchdb": "~3.2.1",
+    "swipebox": "~1.2.9"
   }
 }

@@ -9,6 +9,16 @@ function GalleryView(options) {
 GalleryView.prototype.populateTemplate = function(viewModel) {
   $( this.containerSelector ).loadTemplate(
     this.template,
-    viewModel
+    viewModel,
+    {
+      success: function() {
+        $(document).trigger("templatePopulated.GalleryView");
+      }
+    }
   );
+};
+
+GalleryView.prototype.bindImageViewer = function() {
+  $( this.containerSelector + " a" ).addClass("swipebox");
+  $( ".swipebox" ).swipebox();
 };

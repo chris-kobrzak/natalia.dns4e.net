@@ -2,8 +2,8 @@
     PouchDB,
     GalleryModel,
     GalleryHierarchyModel,
-    GalleryViewController,
-    GalleryNavigationViewController,
+    GalleryView,
+    GalleryNavigationView,
     GalleryManager,
     RemoteDatabaseManager) {
   var dbName = "natalie_gallery",
@@ -12,13 +12,13 @@
     remoteDb = new PouchDB( remoteDbUrl ),
     galleryModel = new GalleryModel( db ),
     galleryHierarchyModel = new GalleryHierarchyModel( db ),
-    galleryViewController = new GalleryViewController(),
-    galleryNavigationViewController = new GalleryNavigationViewController(),
+    galleryView = new GalleryView(),
+    galleryNavigationView = new GalleryNavigationView(),
     galleryManager = new GalleryManager({
       galleryModel: galleryModel,
       galleryHierarchyModel: galleryHierarchyModel,
-      galleryViewController: galleryViewController,
-      galleryNavigationViewController: galleryNavigationViewController
+      galleryView: galleryView,
+      galleryNavigationView: galleryNavigationView
     }),
     remoteDatabaseManager = new RemoteDatabaseManager( remoteDb, db );
   galleryManager.handleEvents();
@@ -27,8 +27,8 @@
   PouchDB,
   GalleryModel,
   GalleryHierarchyModel,
-  GalleryViewController,
-  GalleryNavigationViewController,
+  GalleryView,
+  GalleryNavigationView,
   GalleryManager,
   RemoteDatabaseManager
 );

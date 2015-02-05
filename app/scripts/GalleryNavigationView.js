@@ -1,4 +1,4 @@
-function GalleryNavigationViewController(options) {
+function GalleryNavigationView(options) {
   var defaults = {
     containerSelector: "#galleryNavigation",
     template: "templates/galleryYear.html",
@@ -8,7 +8,7 @@ function GalleryNavigationViewController(options) {
   $.extend(this, defaults, options);
 }
 
-GalleryNavigationViewController.prototype.populateTemplate = function(viewModel) {
+GalleryNavigationView.prototype.populateTemplate = function(viewModel) {
   var innerContainerBaseSelector = this.innerContainerBaseSelector,
     innerTemplate = this.innerTemplate;
   function populateGallerySubnavigationTemplates() {
@@ -31,7 +31,7 @@ GalleryNavigationViewController.prototype.populateTemplate = function(viewModel)
           if ( ! isLast ) {
             return;
           }
-          $(document).trigger("templatePopulated.GalleryNavigationViewController");
+          $(document).trigger("templatePopulated.GalleryNavigationView");
         }
       }
     );

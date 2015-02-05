@@ -1,8 +1,8 @@
 function GalleryManager(collaborators) {
   this.galleryModel = collaborators.galleryModel;
-  this.galleryViewController = collaborators.galleryViewController;
+  this.galleryView = collaborators.galleryView;
   this.galleryHierarchyModel = collaborators.galleryHierarchyModel;
-  this.galleryNavigationViewController = collaborators.galleryNavigationViewController;
+  this.galleryNavigationView = collaborators.galleryNavigationView;
 }
 
 GalleryManager.prototype.handleEvents = function( galleryModel ) {
@@ -58,31 +58,31 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
 
 GalleryManager.prototype.handleGalleryReadyEvent = function() {
   var context = {
-    galleryViewController: this.galleryViewController
+    galleryView: this.galleryView
   };
   $(document).on("loaded.GalleryModel",
   context,
   function(event, data) {
     var galleryViewModel = new GalleryViewModel( data.gallery );
-    event.data.galleryViewController.populateTemplate( galleryViewModel );
+    event.data.galleryView.populateTemplate( galleryViewModel );
   });
 };
 
 GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
   var context = {
-    galleryNavigationViewController: this.galleryNavigationViewController
+    galleryNavigationView: this.galleryNavigationView
   };
   $(document).on("loaded.GalleryHierarchyModel",
   context,
   function(event, data) {
     var galleryNavigationViewModel = new GalleryNavigationViewModel( data.galleryHierarchy );
-    event.data.galleryNavigationViewController.populateTemplate( galleryNavigationViewModel );
+    event.data.galleryNavigationView.populateTemplate( galleryNavigationViewModel );
   });
 };
 
 /*
 GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
-  $(document).on("templatePopulated.GalleryNavigationViewController", function() {
+  $(document).on("templatePopulated.GalleryNavigationView", function() {
     $("#galleryNavigation").on("click", "a", function( event ) {
       var dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( this.href );
       galleryModel.load( dateParts.year, dateParts.month );

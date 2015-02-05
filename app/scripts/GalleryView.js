@@ -1,4 +1,4 @@
-function GalleryViewController(options) {
+function GalleryView(options) {
   var defaults = {
     containerSelector: "#gallery",
     template: "templates/galleryItem.html"
@@ -6,7 +6,7 @@ function GalleryViewController(options) {
   $.extend(this, defaults, options);
 }
 
-GalleryViewController.prototype.populateTemplate = function(viewModel) {
+GalleryView.prototype.populateTemplate = function(viewModel) {
   $( this.containerSelector ).loadTemplate(
     this.template,
     viewModel

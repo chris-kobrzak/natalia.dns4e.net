@@ -1,5 +1,3 @@
-// TODO Remote sync functionality ought to go to a separate class
-// TODO Class should be broken down into gallery and gallery-nav
 function GalleryModel(dbConnection) {
   this.db = dbConnection;
 }
@@ -21,6 +19,7 @@ GalleryModel.prototype.loadLatestImage = function() {
     skip: 1,
   }).then( function( response ) {
     var image = GalleryModel.parseDbResponseForImage( response.rows[0] );
+    // TODO Event name should be a variable to support multiple galleries
     $(document).trigger( "latestImageLoaded.GalleryModel", {
       image: image
     });
@@ -48,6 +47,7 @@ GalleryModel.prototype.load = function( year, month ) {
     endkey: GalleryModel.generateDbKeyFromYearAndMonth( year, month )
   }).then( function( response ) {
     var gallery = GalleryModel.parseDbResponse( response.rows );
+    // TODO Event name should be a variable to support multiple galleries
     $(document).trigger( "loaded.GalleryModel", {
       gallery: gallery
     });

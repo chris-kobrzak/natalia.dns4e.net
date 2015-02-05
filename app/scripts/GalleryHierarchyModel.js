@@ -5,6 +5,7 @@ function GalleryHierarchyModel(dbConnection) {
 GalleryHierarchyModel.prototype.load = function() {
   this.db.allDocs().then( function( response ) {
     var galleryHierarchy = GalleryHierarchyModel.parseDbResponse( response.rows );
+    // TODO Event name should be a variable to support multiple galleries
     $(document).trigger( "loaded.GalleryHierarchyModel", {
       galleryHierarchy: galleryHierarchy
     });

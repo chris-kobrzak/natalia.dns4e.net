@@ -108,6 +108,17 @@ A sample entry in the *natalie_gallery* database:
 }
 ```
 
+#### Bulk import of data
+
+```
+$ curl -d @<JSON file path> \
+  -X POST \
+  -H "Content-Type: application/json" \
+  http://<CouchDB host name>:5984/natalie_gallery/_bulk_docs
+```
+
+The format of the JSON file being imported is an object containing the `docs` key which holds an array of JSON documents.
+
 ## Front-end configuration
 
 I am intending to use the following technologies:

@@ -13,10 +13,6 @@ GalleryManager.prototype.handleEvents = function( galleryModel ) {
 //  this.handleGalleryNavigationReadyEvent( galleryModel );
 };
 
-/*GalleryManager.prototype.replicateDb = function() {
-  this.galleryModel.replicateDb();
-};*/
-
 GalleryManager.prototype.handleUrlChangeEvent = function() {
   $(window).bind("load hashchange",
     {

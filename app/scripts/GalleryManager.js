@@ -3,14 +3,28 @@ function GalleryManager(collaborators) {
   this.galleryView = collaborators.galleryView;
   this.galleryHierarchyModel = collaborators.galleryHierarchyModel;
   this.galleryNavigationView = collaborators.galleryNavigationView;
+  this.setCurrentImage(undefined);
 }
 
-GalleryManager.prototype.handleEvents = function( galleryModel ) {
+GalleryManager.prototype.handleEvents = function() {
+  this.handleDbReplicatedEvent();
   this.handleUrlChangeEvent();
   this.handleLatestImageSelectedEvent();
   this.handleGalleryReadyEvent();
   this.handleGalleryHierarchyReadyEvent();
 //  this.handleGalleryNavigationReadyEvent( galleryModel );
+};
+
+GalleryManager.prototype.handleDbReplicatedEvent = function() {
+  var context = {
+   galleryModel: this.galleryModel
+  };
+  $(document).on("dbReplicated.RemoteDatabaseManager",
+    context,
+    function() {
+      context.galleryModel.loadLatestImage();
+    }
+  );
 };
 
 GalleryManager.prototype.handleUrlChangeEvent = function() {
@@ -35,22 +49,31 @@ GalleryManager.prototype.handleUrlChangeEvent = function() {
 };
 
 GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
-  var context = {
+  var objects = {
     galleryManager: this,
     galleryModel: this.galleryModel,
     galleryHierarchyModel: this.galleryHierarchyModel
   };
   $(document).on("latestImageLoaded.GalleryModel",
-    context,
+    objects,
     function(event, data) {
       var context = event.data,
+        url = window.location.hash,
+        urlDateParts = GalleryManager.parseGalleryLinkForYearAndMonth( url ),
         gallery = data.image.gallery,
         dateParts = gallery.split("-"),
         year = dateParts[0],
         month = dateParts[1];
-// TODO Only proceed if the latest image is different from the one stored last time
-      context.galleryManager.setImage( data.image );
-      context.galleryModel.load( year, month );
+      var currentImage = context.galleryManager.getCurrentImage();
+      if (currentImage && currentImage.numericDate === data.image.numericDate) {
+        return;
+      }
+      context.galleryManager.setCurrentImage( data.image );
+      if (! urlDateParts.year ||
+          urlDateParts.year === year &&
+          urlDateParts.month === month ) {
+        context.galleryModel.load( year, month );
+      }
       context.galleryHierarchyModel.load();
     }
   );
@@ -103,10 +126,10 @@ GalleryManager.parseGalleryLinkForYearAndMonth = function( link ) {
   };
 };
 
-GalleryManager.prototype.setImage = function( image ) {
+GalleryManager.prototype.setCurrentImage = function( image ) {
   this.image = image;
 };
 
-GalleryManager.prototype.getImage = function() {
+GalleryManager.prototype.getCurrentImage = function() {
   return this.image;
 };

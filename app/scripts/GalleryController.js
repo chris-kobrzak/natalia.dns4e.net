@@ -1,12 +1,16 @@
-function GalleryManager(collaborators) {
+function GalleryController(collaborators) {
   this.galleryModel = collaborators.galleryModel;
   this.galleryView = collaborators.galleryView;
   this.galleryHierarchyModel = collaborators.galleryHierarchyModel;
   this.galleryNavigationView = collaborators.galleryNavigationView;
+
   this.setCurrentImage(undefined);
+  this.handleEvents();
+
+  return this;
 }
 
-GalleryManager.prototype.handleEvents = function() {
+GalleryController.prototype.handleEvents = function() {
   this.handleDbReplicatedEvent();
   this.handleUrlChangeEvent();
   this.handleLatestImageSelectedEvent();
@@ -16,7 +20,7 @@ GalleryManager.prototype.handleEvents = function() {
 //  this.handleGalleryNavigationReadyEvent( galleryModel );
 };
 
-GalleryManager.prototype.handleDbReplicatedEvent = function() {
+GalleryController.prototype.handleDbReplicatedEvent = function() {
   var context = {
    galleryModel: this.galleryModel
   };
@@ -28,7 +32,7 @@ GalleryManager.prototype.handleDbReplicatedEvent = function() {
   );
 };
 
-GalleryManager.prototype.handleUrlChangeEvent = function() {
+GalleryController.prototype.handleUrlChangeEvent = function() {
   var context = {
    galleryModel: this.galleryModel,
    galleryHierarchyModel: this.galleryHierarchyModel
@@ -38,7 +42,7 @@ GalleryManager.prototype.handleUrlChangeEvent = function() {
     function(event) {
       var url = window.location.hash,
         context = event.data,
-        dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( url );
+        dateParts = GalleryController.parseGalleryLinkForYearAndMonth( url );
       if (dateParts) {
         context.galleryModel.load( dateParts.year, dateParts.month );
         context.galleryHierarchyModel.load();
@@ -49,9 +53,9 @@ GalleryManager.prototype.handleUrlChangeEvent = function() {
   );
 };
 
-GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
+GalleryController.prototype.handleLatestImageSelectedEvent = function() {
   var objects = {
-    galleryManager: this,
+    galleryController: this,
     galleryModel: this.galleryModel,
     galleryHierarchyModel: this.galleryHierarchyModel
   };
@@ -60,16 +64,16 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
     function(event, data) {
       var context = event.data,
         url = window.location.hash,
-        urlDateParts = GalleryManager.parseGalleryLinkForYearAndMonth( url ),
+        urlDateParts = GalleryController.parseGalleryLinkForYearAndMonth( url ),
         gallery = data.image.gallery,
         dateParts = gallery.split("-"),
         year = dateParts[0],
         month = dateParts[1];
-      var currentImage = context.galleryManager.getCurrentImage();
+      var currentImage = context.galleryController.getCurrentImage();
       if (currentImage && currentImage.numericDate === data.image.numericDate) {
         return;
       }
-      context.galleryManager.setCurrentImage( data.image );
+      context.galleryController.setCurrentImage( data.image );
       if (! urlDateParts.year ||
           urlDateParts.year === year &&
           urlDateParts.month === month ) {
@@ -80,7 +84,7 @@ GalleryManager.prototype.handleLatestImageSelectedEvent = function() {
   );
 };
 
-GalleryManager.prototype.handleGalleryReadyEvent = function() {
+GalleryController.prototype.handleGalleryReadyEvent = function() {
   var objects = {
     galleryView: this.galleryView
   };
@@ -93,7 +97,7 @@ GalleryManager.prototype.handleGalleryReadyEvent = function() {
   );
 };
 
-GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
+GalleryController.prototype.handleGalleryHierarchyReadyEvent = function() {
   var context = {
     galleryNavigationView: this.galleryNavigationView
   };
@@ -106,7 +110,7 @@ GalleryManager.prototype.handleGalleryHierarchyReadyEvent = function() {
   );
 };
 
-GalleryManager.prototype.handleGalleryViewTemplatePopulatedEvent = function() {
+GalleryController.prototype.handleGalleryViewTemplatePopulatedEvent = function() {
   var context = {
     galleryView: this.galleryView
   };
@@ -119,17 +123,17 @@ GalleryManager.prototype.handleGalleryViewTemplatePopulatedEvent = function() {
 };
 
 /*
-GalleryManager.handleGalleryNavigationReadyEvent = function( galleryModel ) {
+GalleryController.handleGalleryNavigationReadyEvent = function( galleryModel ) {
   $(document).on("templatePopulated.GalleryNavigationView", function() {
     $("#galleryNavigation").on("click", "a", function( event ) {
-      var dateParts = GalleryManager.parseGalleryLinkForYearAndMonth( this.href );
+      var dateParts = GalleryController.parseGalleryLinkForYearAndMonth( this.href );
       galleryModel.load( dateParts.year, dateParts.month );
     });
   });
 };
 */
 
-GalleryManager.parseGalleryLinkForYearAndMonth = function( link ) {
+GalleryController.parseGalleryLinkForYearAndMonth = function( link ) {
   var galleryRegEx = /gallery\-([0-9]{4})\-([0-9]{2})/i,
     dateParts = link.match( galleryRegEx );
   if (dateParts === null) {
@@ -141,10 +145,10 @@ GalleryManager.parseGalleryLinkForYearAndMonth = function( link ) {
   };
 };
 
-GalleryManager.prototype.setCurrentImage = function( image ) {
+GalleryController.prototype.setCurrentImage = function( image ) {
   this.image = image;
 };
 
-GalleryManager.prototype.getCurrentImage = function() {
+GalleryController.prototype.getCurrentImage = function() {
   return this.image;
 };

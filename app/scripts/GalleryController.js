@@ -118,6 +118,7 @@ GalleryController.prototype.handleGalleryViewTemplatePopulatedEvent = function()
     context,
     function(event) {
       event.data.galleryView.bindImageViewer();
+      WindowUtil.scrollToTop();
     }
   );
 };

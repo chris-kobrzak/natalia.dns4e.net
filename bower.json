@@ -2,9 +2,9 @@
   "name": "natalia.dns4e.net",
   "private": true,
   "dependencies": {
-    "jquery": "~1.11.1",
+    "jquery": "~1.11.2",
     "jquery-template": "~1.4.4",
-    "pouchdb": "~3.2.1",
+    "pouchdb": "~3.3.0",
     "swipebox": "~1.2.9"
   },
   "overrides": {

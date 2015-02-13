@@ -112,6 +112,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           open: false,
+          hostname: "localhost",
           port: 9001,
           middleware: function(connect) {
             return [

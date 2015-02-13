@@ -17,10 +17,15 @@
     </script>
 
     <!-- include source files here... -->
+    <script src="src/ArrayUtil.js"></script>
 
     <!-- include spec files here... -->
-    <script src="spec/test.js"></script>
+    <script src="spec/ArrayUtil_test.js"></script>
 
-    <script>mocha.run()</script>
+    <script>
+      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        mocha.run();
+      }
+    </script>
 </body>
 </html>

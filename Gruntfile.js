@@ -161,6 +161,20 @@ module.exports = function (grunt) {
       ]
     },
 
+    symlink: {
+      options: {
+        overwrite: false
+      },
+      jsclasses: {
+        files: [{
+          expand: true,
+          cwd: "<%= config.app %>/scripts/",
+          src: ["[A-Z]*.js"],
+          dest: "test/src/"
+        }]
+      }
+    },
+
     // Mocha testing framework configuration options
     mocha: {
       all: {
@@ -485,6 +499,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       "connect:test",
+      "symlink:jsclasses",
       "mocha"
     ]);
   });

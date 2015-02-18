@@ -17,5 +17,20 @@
   "strict": false,
   "trailing": true,
   "smarttabs": true,
-  "jquery": true
+  "jquery": true,
+  "globals": {
+    "expect": true,
+    "ArrayUtil": true,
+    "GalleryController": true,
+    "GalleryHierarchyModel": true,
+    "GalleryModel": true,
+    "GalleryNavigationView": true,
+    "GalleryNavigationViewModel": true,
+    "GalleryView": true,
+    "GalleryViewModel": true,
+    "NumberUtil": true,
+    "PouchDB": true,
+    "RemoteDatabaseManager": true,
+    "WindowUtil": true
+  }
 }

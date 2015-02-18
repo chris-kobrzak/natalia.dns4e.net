@@ -384,7 +384,7 @@ module.exports = function (grunt) {
       },
       distSwipeboxImagePaths: {
         options: {
-          process: function(content, srcPath) {
+          process: function(content) {
             return content.replace(/\.\.\/img/g, "/images/swipebox");
           }
         },

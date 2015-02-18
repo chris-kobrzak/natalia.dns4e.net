@@ -1,4 +1,5 @@
 /* global describe, it */
+/*jshint expr: true*/
 
 (function () {
   "use strict";

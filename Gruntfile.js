@@ -112,6 +112,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           open: false,
+          hostname: "localhost",
           port: 9001,
           middleware: function(connect) {
             return [
@@ -158,6 +159,20 @@ module.exports = function (grunt) {
         "!<%= config.app %>/scripts/vendor/*",
         "test/spec/{,*/}*.js"
       ]
+    },
+
+    symlink: {
+      options: {
+        overwrite: false
+      },
+      jsclasses: {
+        files: [{
+          expand: true,
+          cwd: "<%= config.app %>/scripts/",
+          src: ["[A-Z]*.js"],
+          dest: "test/src/"
+        }]
+      }
     },
 
     // Mocha testing framework configuration options
@@ -484,6 +499,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       "connect:test",
+      "symlink:jsclasses",
       "mocha"
     ]);
   });

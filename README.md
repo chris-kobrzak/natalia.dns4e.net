@@ -3,30 +3,58 @@ natalia.dns4e.net
 
 Source code for the new video and image gallery site of my little one.
 
-This is a new version of the site that has not been released yet.
-
 ## Server-side configuration
 
 ### Web Server
 
-The new Web site is intended to continue to run on a RaspberryPi and due to its hardware limitations it is critically important to choose solutions that are not too resource-hungry.  The Web server is no exception and we are going to stick to Lighttpd or pick another lightweight option.
+The Web site is intended to run on a RaspberryPi and due to its hardware limitations it is critically important to pick solutions that are not too resource-hungry.  For this reason we have opted for [nginx](http://nginx.org).
 
 #### Configuration
 
-TODO (Depending on the solution chosen)
+File: `/etc/nginx/sites-available/natalia.dns4e.net`
 
+```
+server {
+  listen 80; ## listen for ipv4; this line is default and implied
+
+  root /srv/WebRoot/natalia.dns4e.net/html;
+  index index.html;
+
+  server_name natalia.dns4e.net;
+
+  location / {
+    # First attempt to serve request as file, then
+    # as directory, then fall back to displaying a 404.
+    try_files $uri $uri/ /index.html;
+  }
+
+  location /photo/ {
+    alias /srv/Shared/Media/Pictures/Natalia/;
+  }
+
+  location /thumbnail/ {
+    alias "/srv/Shared/Media/Pictures/Natalia - low res/";
+  }
+
+  location /video/ {
+    alias /srv/Shared/Media/Video/Natalia/;
+  }
+
+  rewrite ^/videos/?$ /videos.html break;
+}
+```
 ### Database
 
-We are going to use CouchDB and synchronise and persist data from it within the browser using a JavaScript library called PouchDB.  The goal is to achieve a native app-like experience, without all the syncing headaches by delegating the hard work to PouchDB.
+We are going to use [CouchDB](http://couchdb.apache.org) and synchronise and persist data from it within the browser using a JavaScript library called [PouchDB](http://pouchdb.com).  The goal is to achieve a native app-like experience, without all the syncing headaches by delegating the hard work to PouchDB.
 
 #### Requirements
 
 - Apache CouchDB
-- Either the ```add-cors-to-couchdb``` NodeJS module or manually adding CORS-related entries to the CouchDB's config file called ```local.ini```
+- Either the `add-cors-to-couchdb` [Node.js](http://nodejs.org) module or manually adding CORS-related entries to the CouchDB's config file called `local.ini`
 
 #### Configuration
 
-Most of the below configuration changes can be done either via the [Fauxton Web interface](url:http://127.0.0.1:5984/_utils/fauxton) or directly in the CouchDB configuration file: ```/usr/local/etc/couchdb/local.ini```
+Most of the below configuration changes can be done either via the [Fauxton Web interface](url:http://127.0.0.1:5984/_utils/fauxton) or directly in the CouchDB configuration file: `/usr/local/etc/couchdb/local.ini`
 
 - Adding _server admin user_ to disable public access to the database which is the default setting.
 - Adding a database user (after adding the user you should see a corresponding document in the system _users database).  Like all other operations in CouchDB, this can be done through their API:
@@ -40,7 +68,7 @@ curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:jan \
 // To verify:
 curl -X POST http://127.0.0.1:5984/_session -d 'name= natalia_www&password= topSecret'
 ```
-- Leave ```WWW-Authenticate``` commented out
+- Leave `WWW-Authenticate` commented out
 - Enabling CORS to make it possible for PouchDB to talk to the CouchDB database server:
 
 ```
@@ -58,12 +86,12 @@ origins = [* for all hosts or a particular URL]
 #### CouchDB database name
 - Create a database called *natalie_gallery*
 
-#### Makind a database read-only
+#### Making the database read-only
 
-Create the following document (it will be shown under ```design docs``` in Fauxton)
+Create the following document (it will be shown under `design docs` in Fauxton)
 
-``` js
-{     
+```js
+{
   "_id": "_design/natalie_gallery",
   "language": "javascript",
   "validate_doc_update": "
@@ -123,12 +151,12 @@ The format of the JSON file being imported is an object containing the `docs` ke
 
 I am intending to use the following technologies:
 
-- Yeoman with _webapp_ generator,
-- Grunt,
-- Bower,
+- [Yeoman](http://yeoman.io) with _webapp_ generator,
+- [Grunt](http://gruntjs.com),
+- [Bower](http://bower.io),
 - PouchDB,
-- jQuery Template,
-- jQuery Swipebox,
+- [jQuery Template](https://github.com/thangchung/jquery-template),
+- [jQuery Swipebox](https://github.com/brutaldesign/swipebox),
 - Girder or Gridism (the latter is less Sass-friendly though),
 - Vanilla JavaScript.
 
@@ -136,7 +164,7 @@ I am intending to use the following technologies:
 
 ``` bash
 $ yo webapp // with Sass ticked
-$ npm install grunt-connect-proxy --save-dev
+$ npm install
 $ bower install
 $ grunt build
 $ grunt serve // for development purposes

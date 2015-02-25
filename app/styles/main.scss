@@ -5,6 +5,7 @@ $colour_grey: #ccc;
 $colour_vivid_violet: #92278f;
 
 $font_comic: comic sans ms;
+$font_comic_ios: chalkboardse-bold;
 $font_trebuchet: trebuchet ms;
 $font_tahoma: tahoma;
 $font_verdana: verdana;
@@ -19,21 +20,40 @@ body {
   color: $colour_white;
   background-color: $colour_vivid_violet;
 }
+
 a {
   color: #fff
 }
+
 h1 {
   margin: 0;
   padding: 0;
   font-size: 3em;
-  font-family: $font_comic, $font_trebuchet, $font_tahoma, $font_verdana, $font_arial, $font_sans;
+  font-family: $font_comic, $font_comic_ios, $font_trebuchet, $font_tahoma, $font_verdana, $font_arial, $font_sans;
 }
+
+@media (orientation: portrait) and (max-width: 667px) {
+  h1 {
+    font-size: 2.0em;
+    line-height: 95%;
+    padding-bottom: .2em
+  }
+}
+
 h3 {
   clear: both
 }
+
 img {
   border: .8em solid $colour_pink
 }
+
+@media (orientation: portrait) and (max-width: 667px) {
+  img {
+    height: 110px
+  }
+}
+
 section {
   ol {
     margin: 0;
@@ -51,6 +71,13 @@ section {
     }
   }
 }
+
+@media (orientation: portrait) and (max-width: 667px) {
+  section {
+    margin-top: 5em;
+  }
+}
+
 footer {
   clear: both;
   padding: 2em 0 0;
@@ -63,6 +90,7 @@ footer {
     }
   }
 }
+
 header {
   margin-bottom: 1em;
   border-top: 1px dashed $colour_pink;
@@ -71,6 +99,27 @@ header {
     margin-top: 0;
   }
 }
+
+@media (orientation: portrait) and (max-width: 667px) {
+  header {
+    margin-top: .6em;
+    border-top: 0;
+    p {
+      margin-bottom: 0.5em
+    }
+  }
+}
+
+@media (orientation: portrait) and (max-width: 667px) {
+  nav.main {
+    position: absolute;
+    right: 1.8em;
+    top: 4.5em;
+    display: block;
+    width: 75%;
+  }
+}
+
 nav.main {
   height: 1.6em;
   padding: .5em 0;
@@ -86,18 +135,44 @@ nav.main {
     }
   }
 }
-nav.galleries {
-  display: block;
-  float: left;
-  width: 20%;
-  ol, ul {
-    padding-left: 1em;
-    li {
-      padding-bottom: .7em;
-      list-style: none;
+
+@media (min-width: 667px) {
+  nav.galleries {
+    display: block;
+    float: left;
+    width: 20%;
+    ol, ul {
+      padding-left: 1em;
+      li {
+        padding-bottom: .7em;
+        list-style: none;
+      }
     }
   }
 }
+
+/*and (min-width: 500px)*/
+@media (orientation: portrait) and (max-width: 667px) {
+  nav.galleries {
+    display: block;
+    position: absolute;
+    top: 5.2em;
+    left: 1.8em;
+    width: 2.5em;
+    height: 2.5em;
+    background: url(../images/burger-menu.svg);
+    background-size: 2.5em;
+    ol, ul {
+      display: none;
+      padding-left: 1em;
+      li {
+        padding-bottom: .7em;
+        list-style: none;
+      }
+    }
+  }
+}
+
 .aboutMe {
   width: 100%;
   padding: 2em 0;
@@ -118,6 +193,7 @@ nav.galleries {
     }
   }
 }
+
 .browsehappy {
   margin: 0.2em 0;
   padding: 0.5em;

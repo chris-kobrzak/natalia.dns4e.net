@@ -1,4 +1,4 @@
-natalia.dns4e.net
+tunia.duckdns.org
 =================
 
 Source code for the new video and image gallery site of my little one.
@@ -11,16 +11,16 @@ The Web site is intended to run on a RaspberryPi and due to its hardware limitat
 
 #### Configuration
 
-File: `/etc/nginx/sites-available/natalia.dns4e.net`
+File: `/etc/nginx/sites-available/tunia.duckdns.org`
 
 ```
 server {
   listen 80; ## listen for ipv4; this line is default and implied
 
-  root /srv/WebRoot/natalia.dns4e.net/html;
+  root /srv/WebRoot/tunia.duckdns.org/html;
   index index.html;
 
-  server_name natalia.dns4e.net;
+  server_name tunia.duckdns.org;
 
   location / {
     # First attempt to serve request as file, then

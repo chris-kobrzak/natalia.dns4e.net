@@ -60,13 +60,13 @@ Most of the below configuration changes can be done either via the [Fauxton Web 
 - Adding a database user (after adding the user you should see a corresponding document in the system _users database).  Like all other operations in CouchDB, this can be done through their API:
 
 ```
-curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:jan \
+curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:natalie_www \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
-     -d '{"name": "natalia_www", "password": "topSecret", "roles": [], "type": "user"}'
+     -d '{"name": "natalie_www", "password": "topSecret", "roles": [], "type": "user"}'
 
 // To verify:
-curl -X POST http://127.0.0.1:5984/_session -d 'name= natalia_www&password= topSecret'
+curl -X POST http://127.0.0.1:5984/_session -d 'name=natalia_www&password=topSecret'
 ```
 - Leave `WWW-Authenticate` commented out
 - Enabling CORS to make it possible for PouchDB to talk to the CouchDB database server:

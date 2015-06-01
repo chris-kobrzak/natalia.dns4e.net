@@ -169,3 +169,19 @@ $ bower install
 $ grunt build
 $ grunt serve // for development purposes
 ```
+
+## Running site as Docker containers
+
+You can build the Web server and CouchDB Docker containers with Docker Compose.
+Please note, the current Nginx configuration file doesn't have a concept
+of image file storage - it merely proxies image and video file requests
+to the production URLs.
+
+``` bash
+cd <application root directory>
+docker-compose up -d
+docker ps # Note down CouchDB Docker contained ID
+docker exec -it <CouchDB container Docker ID> bash
+$ replicate_couchdb
+$ create_couchdb_reader
+```

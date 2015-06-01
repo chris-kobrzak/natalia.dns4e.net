@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+PRODUCTION_COUCHDB_DB_URL="http://tunia.duckdns.org:5984/natalie_gallery"
+
+echo "Replicating upstream database..."
+
+curl -X POST http://127.0.0.1:5984/_replicate \
+  -H "Content-Type: application/json" \
+  -d '{"source":"'"${PRODUCTION_COUCHDB_DB_URL}"'","target":"'"${COUCHDB_DBNAME}"'"}'
+
+exit 0

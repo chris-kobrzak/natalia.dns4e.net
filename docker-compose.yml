@@ -1,0 +1,13 @@
+web:
+  build: ./docker/nginx/
+  ports:
+    - "32771:80"
+  volumes:
+    - /Users/Chris/Development/JavaScript/NataliesGallery/dist:/usr/share/nginx/html:ro
+
+db:
+  build: ./docker/couchdb/
+  environment:
+    COUCHDB_DBNAME: natalie_gallery
+  ports:
+    - "5984:5984"

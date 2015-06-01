@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+COUCHDB_READER="natalie_www"
+COUCHDB_READER_PASSWORD="topSecret"
+
+echo "Creating database reader..."
+
+curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:natalie_www \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "'"${COUCHDB_READER}"'", "password": "'"${COUCHDB_READER_PASSWORD}"'", "roles": [], "type": "user"}'
+
+exit 0

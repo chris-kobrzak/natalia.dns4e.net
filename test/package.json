@@ -1,0 +1,19 @@
+{
+  "name": "tunia.duckdns.org",
+  "version": "0.1.0",
+  "description": "Little Natalie's Web site",
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "karma": "^0.12.35",
+    "karma-chai": "^0.1.0",
+    "karma-coverage": "~0.2",
+    "karma-html-reporter": "^0.2.4",
+    "karma-jshint-preprocessor": "0.0.4",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "mocha": "^2.2.5"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

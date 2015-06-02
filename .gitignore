@@ -1,6 +1,7 @@
 node_modules
 dist
 test/src
+test/tmp
 .tmp
 .sass-cache
 bower_components

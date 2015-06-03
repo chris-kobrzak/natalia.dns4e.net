@@ -181,7 +181,6 @@ to the production URLs.
 cd <application root directory>
 docker-compose up -d
 docker ps # Note down CouchDB Docker contained ID
-docker exec -it <CouchDB container Docker ID> bash
-$ replicate_couchdb
-$ create_couchdb_reader
+docker exec <CouchDB container Docker ID> replicate_couchdb
+docker exec <CouchDB container Docker ID> create_couchdb_reader
 ```

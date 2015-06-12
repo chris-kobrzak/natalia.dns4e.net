@@ -1,4 +1,4 @@
-FROM nginx
+FROM mazzolino/armhf-nginx
 
 RUN rm /etc/nginx/conf.d/default.conf
 

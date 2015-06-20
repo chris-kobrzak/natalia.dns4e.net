@@ -1,9 +1,11 @@
 web:
   build: ./docker/nginx/
   ports:
-    - ":80"
+    - "80:80"
   volumes:
-    - /Users/Chris/Development/JavaScript/NataliesGallery/dist:/usr/share/nginx/html:ro
+    - /srv/WebRoot/tunia.duckdns.org/html:/usr/share/nginx/html:ro
+    - /srv/Shared/Media/Pictures:/srv/Shared/Media/Pictures:ro
+    - /srv/Shared/Media/Video:/srv/Shared/Media/Video:ro
 
 db:
   build: ./docker/couchdb/
@@ -11,3 +13,5 @@ db:
     COUCHDB_DBNAME: natalie_gallery
   ports:
     - "5984:5984"
+  volumes:
+    - /srv/WebRoot/tunia.duckdns.org/couchdb:/usr/local/var/lib/couchdb:rw

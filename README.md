@@ -66,7 +66,7 @@ curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:natalie_www \
      -d '{"name": "natalie_www", "password": "topSecret", "roles": [], "type": "user"}'
 
 // To verify:
-curl -X POST http://127.0.0.1:5984/_session -d 'name=natalia_www&password=topSecret'
+curl -X POST http://127.0.0.1:5984/_session -d 'name=natalie_www&password=topSecret'
 ```
 - Leave `WWW-Authenticate` commented out
 - Enabling CORS to make it possible for PouchDB to talk to the CouchDB database server:

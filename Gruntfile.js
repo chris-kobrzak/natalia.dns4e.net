@@ -80,7 +80,7 @@ module.exports = function (grunt) {
         // debug: true,
         livereload: 35729,
         // Change this to "0.0.0.0" to access the server from outside
-        hostname: "natalia.dns4e.local"
+        hostname: "tunia.duckdns.local"
       },
       // TODO This is a temporary measure
       // to be able to use photos currently available on the
@@ -88,12 +88,12 @@ module.exports = function (grunt) {
       proxies: [
         {
           context: "/photo",
-          host: "natalia.dns4e.net",
+          host: "tunia.duckdns.org",
           port: 80
         },
         {
           context: "/thumbnail",
-          host: "natalia.dns4e.net",
+          host: "tunia.duckdns.org",
           port: 80
         }
       ],

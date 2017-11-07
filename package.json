@@ -1,6 +1,6 @@
 {
   "name": "tunia.duckdns.org",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Little Natalie's Web site",
   "devDependencies": {
     "apache-server-configs": "^2.7.1",

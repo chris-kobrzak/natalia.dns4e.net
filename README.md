@@ -69,6 +69,12 @@ curl -X PUT http://127.0.0.1:5984/_users/org.couchdb.user:natalie_www \
 curl -X POST http://127.0.0.1:5984/_session -d 'name=natalie_www&password=topSecret'
 ```
 - Leave `WWW-Authenticate` commented out
+- Preventing non-authenticated users from creating database users (for some reason, this is a default behaviour in CouchDB). Consider adding the following `throw` directive right at the beginning of the `!is_server_or_database_admin` check in the default `_auth` design document:
+
+```
+throw({forbidden : 'Users can only be created by server or DB admins in this specific CouchDB installation'})
+```
+Credit: https://serverfault.com/a/742854/142176
 - Enabling CORS to make it possible for PouchDB to talk to the CouchDB database server:
 
 ```
